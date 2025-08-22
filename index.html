@@ -4,88 +4,130 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Kehadiran Murid</title>
+    <!-- Menambah Google Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #4a90e2; --primary-hover-color: #357abd; --success-color: #34a853;
-            --error-color: #ea4335; --warning-color: #fbbc05; --light-bg-color: #f8f9fa;
-            --white-color: #ffffff; --text-color: #3c4043; --border-color: #dadce0;
-            --shadow-color: rgba(60, 64, 67, 0.15);
-            --font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            --primary-color: #4F46E5; --primary-hover-color: #4338CA; --success-color: #10B981;
+            --error-color: #EF4444; --warning-color: #F59E0B; --light-bg-color: #F9FAFB;
+            --white-color: #ffffff; --text-color-primary: #1F2937; --text-color-secondary: #6B7280;
+            --border-color: #E5E7EB; --shadow-color: rgba(0, 0, 0, 0.05);
+            --font-family: 'Inter', sans-serif;
         }
-        body { font-family: var(--font-family); background-color: var(--light-bg-color); color: var(--text-color); margin: 0; padding: 16px; line-height: 1.6; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; }
-        .container { width: 100%; max-width: 900px; background-color: var(--white-color); padding: 24px; border-radius: 16px; box-shadow: 0 4px 20px var(--shadow-color); border: 1px solid var(--border-color); }
+        *, *::before, *::after { box-sizing: border-box; }
+        body {
+            font-family: var(--font-family); background-color: var(--light-bg-color); color: var(--text-color-primary);
+            margin: 0; padding: 16px; line-height: 1.6; display: flex; justify-content: center;
+            align-items: flex-start; min-height: 100vh;
+        }
+        .container {
+            width: 100%; max-width: 1000px; background-color: var(--white-color);
+            padding: 24px; border-radius: 16px; box-shadow: 0 10px 25px -5px var(--shadow-color), 0 8px 10px -6px var(--shadow-color);
+            border: 1px solid var(--border-color);
+        }
+        .app-header {
+            display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+        }
+        .app-header .icon {
+            background-color: var(--primary-color); color: var(--white-color);
+            width: 40px; height: 40px; border-radius: 8px; display: flex;
+            align-items: center; justify-content: center;
+        }
+        .app-header h1 { font-size: 1.5em; margin: 0; }
         .navigation { display: flex; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid var(--border-color); margin-bottom: 25px; }
-        .nav-btn { padding: 10px 16px; border: none; background-color: transparent; cursor: pointer; font-size: 1em; font-weight: 600; color: #5f6368; border-bottom: 3px solid transparent; transition: color 0.2s, border-color 0.2s; }
+        .nav-btn { padding: 10px 4px; border: none; background-color: transparent; cursor: pointer; font-size: 1em; font-weight: 600; color: var(--text-color-secondary); border-bottom: 3px solid transparent; transition: color 0.2s, border-color 0.2s; margin: 0 12px; }
         .nav-btn:hover { color: var(--primary-color); }
         .nav-btn.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
-        .view { display: none; }
-        .view.active { display: block; }
-        header h1 { margin: 0; color: var(--primary-color); font-size: 1.8em; font-weight: 600; text-align: center; }
-        header p { margin: 8px 0 25px; color: #5f6368; font-size: 1em; text-align: center; }
-        .controls { display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: flex-end; margin-bottom: 30px; }
-        .control-group { display: flex; flex-direction: column; }
-        label { font-weight: 600; margin-bottom: 8px; font-size: 0.9em; color: #202124; }
-        select, input[type="date"], input[type="text"] { width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 8px; box-sizing: border-box; font-size: 1em; font-family: var(--font-family); transition: border-color 0.2s, box-shadow 0.2s; }
-        button { background-color: var(--primary-color); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: 600; transition: background-color 0.2s, transform 0.1s; }
+        .view { display: none; } .view.active { display: block; }
+        header p { margin: -20px 0 25px; color: var(--text-color-secondary); font-size: 1em; text-align: left; }
+        .controls { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: flex-end; margin-bottom: 30px; }
+        label { font-weight: 600; margin-bottom: 8px; font-size: 0.9em; color: var(--text-color-primary); }
+        input[type="date"] { width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1em; font-family: var(--font-family); transition: border-color 0.2s, box-shadow 0.2s; }
+        button { background-color: var(--primary-color); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: 600; transition: background-color 0.2s, transform 0.1s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         button:hover { background-color: var(--primary-hover-color); transform: translateY(-1px); }
-        button:disabled { background-color: #cccccc; cursor: not-allowed; transform: none; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 14px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        button:disabled { background-color: #D1D5DB; cursor: not-allowed; transform: none; }
+        table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+        th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        th { font-size: 0.85em; text-transform: uppercase; color: var(--text-color-secondary); }
         .message { padding: 16px; margin-top: 20px; border-radius: 8px; display: none; text-align: center; font-weight: 500; }
-        .loader { text-align: center; padding: 50px; color: #5f6368; font-size: 1.1em; }
+        .loader { text-align: center; padding: 50px; color: var(--text-color-secondary); font-size: 1.1em; }
         .class-group { margin-bottom: 30px; }
-        .class-group h2 { font-size: 1.4em; color: var(--text-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 8px; margin-bottom: 20px; }
-        .class-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
-        .class-card-button { background-color: var(--white-color); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; text-align: left; cursor: pointer; transition: all 0.2s ease; position: relative; overflow: hidden; }
-        .class-card-button:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.08); }
-        .class-card-button h3 { margin: 0 0 5px; font-size: 1.2em; color: var(--text-color); }
-        .class-card-button p { margin: 0; color: #5f6368; font-size: 0.9em; }
-        .class-card-button .status-indicator { position: absolute; top: 15px; right: 15px; width: 20px; height: 20px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 12px; color: white; font-weight: bold; }
-        .class-card-button.status-pending .status-indicator { background-color: var(--warning-color); }
-        .class-card-button.status-completed .status-indicator { background-color: var(--success-color); }
-        .class-card-button.status-completed .status-indicator::after { content: '✓'; }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 100; display: none; justify-content: center; align-items: center; }
-        .modal-content { background: var(--white-color); padding: 24px; border-radius: 16px; width: 90%; max-width: 700px; max-height: 90vh; position: relative; display: flex; flex-direction: column; }
-        .modal-close-btn { position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 2em; cursor: pointer; color: #999; z-index: 101; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-right: 40px; }
+        .class-group h2 { font-size: 1.25em; color: var(--text-color-primary); border-bottom: 1px solid var(--border-color); padding-bottom: 8px; margin-bottom: 20px; font-weight: 600; }
+        .class-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+        .class-card-button { background-color: var(--white-color); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; text-align: left; cursor: pointer; transition: all 0.2s ease; position: relative; }
+        .class-card-button:hover { transform: translateY(-3px); box-shadow: 0 6px 15px var(--shadow-color); border-color: var(--primary-color); }
+        .class-card-button h3 { margin: 0 0 4px; font-size: 1.1em; color: var(--text-color-primary); font-weight: 600; }
+        .class-card-button p { margin: 0; color: var(--text-color-secondary); font-size: 0.9em; }
+        .status-indicator { position: absolute; top: 16px; right: 16px; width: 24px; height: 24px; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; }
+        .status-indicator.status-pending { background-color: var(--warning-color); }
+        .status-indicator.status-completed { background-color: var(--success-color); }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); z-index: 100; display: none; justify-content: center; align-items: center; padding: 16px; }
+        .modal-content { background: var(--white-color); padding: 24px; border-radius: 16px; width: 100%; max-width: 700px; max-height: 90vh; position: relative; display: flex; flex-direction: column; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1); }
+        .modal-close-btn { position: absolute; top: 16px; right: 16px; background: var(--light-bg-color); border: 1px solid var(--border-color); border-radius: 50%; width: 32px; height: 32px; font-size: 1.2em; cursor: pointer; color: var(--text-color-secondary); z-index: 101; display: flex; align-items: center; justify-content: center; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
         .modal-header h2 { margin: 0; flex-grow: 1; margin-right: 15px; font-size: 1.4em; }
-        #modal-student-list { overflow-y: auto; flex-grow: 1; }
+        #modal-student-list { overflow-y: auto; flex-grow: 1; margin-top: 16px; }
         .summary-section h2 { font-size: 1.4em; border-bottom: 2px solid var(--primary-color); padding-bottom: 8px; margin-bottom: 20px; }
         .stat-card { background: var(--light-bg-color); border-radius: 12px; padding: 20px; text-align: center; border: 1px solid var(--border-color); }
         .stat-card .value { font-size: 2.5em; font-weight: 700; }
         .stat-card .value.green { color: var(--success-color); } .stat-card .value.red { color: var(--error-color); }
         .overall-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; }
-        .class-card { background: var(--white-color); border-radius: 12px; padding: 20px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .class-card h3 { margin: 0 0 15px; font-size: 1.2em; }
-        .class-card .details { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: center; }
         #alerts-container ul { list-style-type: none; padding: 0; }
-        #alerts-container li { background-color: #fef7e0; border-left: 5px solid var(--warning-color); padding: 16px 20px; margin-bottom: 12px; border-radius: 8px; }
-        @media (max-width: 768px) { body { padding: 8px; } .container { padding: 16px; } .controls { grid-template-columns: 1fr; } .class-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); } .modal-content { padding: 16px; } .modal-header h2 { font-size: 1.2em; } }
+        #alerts-container li { background-color: #FFFBEB; border-left: 5px solid var(--warning-color); padding: 16px 20px; margin-bottom: 12px; border-radius: 8px; }
+        
+        /* --- PERUBAHAN CSS DI SINI UNTUK MOBILE --- */
+        @media (max-width: 768px) {
+            body { padding: 8px; }
+            .container { padding: 16px; }
+            .controls { grid-template-columns: 1fr; }
+            .app-header { flex-direction: column; align-items: flex-start; }
+            .navigation {
+                justify-content: center; /* Menengahkan menu navigasi */
+            }
+            .nav-btn {
+                margin: 0;
+                font-size: 0.9em;
+                padding: 8px;
+                flex-grow: 1; /* Memastikan butang mengisi ruang */
+                text-align: center;
+            }
+            .class-grid {
+                grid-template-columns: 1fr; /* Satu lajur untuk senarai kelas */
+            }
+            .modal-header h2 { font-size: 1.2em; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="app-header">
+            <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <h1>Sistem Kehadiran Murid</h1>
+        </div>
         <nav class="navigation">
-            <button class="nav-btn active" data-view="attendance">Rekod Kehadiran</button>
-            <button class="nav-btn" data-view="alerts">Lihat Amaran</button>
+            <button class="nav-btn active" data-view="attendance">Papan Pemuka</button>
+            <button class="nav-btn" data-view="alerts">Amaran</button>
             <button class="nav-btn" data-view="summary">Rumusan</button>
         </nav>
 
         <div id="attendance-view" class="view active">
-            <header><h1>Papan Pemuka Kehadiran</h1><p>Pilih tarikh, kemudian klik pada kelas untuk merekod kehadiran.</p></header>
+            <header><p>Pilih tarikh, kemudian klik pada kelas untuk merekod kehadiran.</p></header>
             <main>
                 <div class="controls"><div class="control-group"><label for="dashboard-date-picker">Pilih Tarikh:</label><input type="date" id="dashboard-date-picker"></div></div>
                 <div id="class-dashboard"><div class="loader">Memuatkan kelas...</div></div>
             </main>
         </div>
         
-        <!-- KOD HTML UNTUK ALERTS & SUMMARY DIKEMBALIKAN -->
         <div id="alerts-view" class="view">
-            <header><h1>Amaran Ketidakhadiran Berturut-turut</h1><p>Senarai murid yang tidak hadir selama 3 hari atau lebih.</p></header>
+            <header><p>Senarai murid yang tidak hadir selama 3 hari atau lebih secara berturut-turut.</p></header>
             <main><div id="alerts-container"></div></main>
         </div>
         <div id="summary-view" class="view">
-            <header><h1>Rumusan Kehadiran Harian</h1><p>Pilih tarikh untuk melihat analisis.</p></header>
+            <header><p>Pilih tarikh untuk melihat analisis kehadiran harian.</p></header>
             <main>
                 <div class="controls"><div class="control-group"><label for="summary-date-picker">Pilih Tarikh:</label><input type="date" id="summary-date-picker"></div><button id="fetch-summary-btn">Papar Rumusan</button></div>
                 <div id="summary-container"></div>
@@ -128,7 +170,7 @@
             document.querySelector(`.nav-btn[data-view="${viewName}"]`).classList.add('active');
             if (viewName === 'attendance') loadClassDashboard();
             if (viewName === 'alerts') fetchAlerts();
-            if (viewName === 'summary') fetchSummary(); // Panggilan fungsi dikembalikan
+            if (viewName === 'summary') fetchSummary();
         }
         navButtons.forEach(btn => btn.addEventListener('click', () => switchView(btn.dataset.view)));
 
@@ -154,7 +196,11 @@
                 if (groupedClasses[groupName]) {
                     dashboardHTML += `<div class="class-group"><h2>${groupName}</h2><div class="class-grid">`;
                     groupedClasses[groupName].forEach(cls => {
-                        dashboardHTML += `<button class="class-card-button ${cls.hasRecord ? 'status-completed' : 'status-pending'}" data-class-id="${cls.classId}" data-class-name="${cls.className}"><div class="status-indicator"></div><h3>${cls.className}</h3><p>${cls.teacherName || 'Tiada Guru'}</p></button>`;
+                        const statusClass = cls.hasRecord ? 'status-completed' : 'status-pending';
+                        const icon = cls.hasRecord 
+                            ? `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`
+                            : `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle></svg>`;
+                        dashboardHTML += `<button class="class-card-button" data-class-id="${cls.classId}" data-class-name="${cls.className}"><div class="status-indicator ${statusClass}">${icon}</div><h3>${cls.className}</h3><p>${cls.teacherName || 'Tiada Guru'}</p></button>`;
                     });
                     dashboardHTML += `</div></div>`;
                 }
@@ -165,7 +211,7 @@
 
         async function openAttendanceModal(classId, className) {
             currentClassId = classId;
-            modalClassName.textContent = `Rekod Kehadiran: ${className}`;
+            modalClassName.textContent = `${className}`;
             modalStudentList.innerHTML = '<div class="loader">Memuatkan senarai murid...</div>';
             attendanceModal.style.display = 'flex';
             try {
@@ -181,7 +227,7 @@
             const oldBtn = modalHeader.querySelector('#submit-btn');
             if (oldBtn) oldBtn.remove();
             if (students.length === 0) { modalStudentList.innerHTML = '<p>Tiada murid ditemui.</p>'; return; }
-            let tableHTML = `<p style="text-align:center; font-style:italic;">Tandakan hanya murid yang tidak hadir, lewat, atau bersebab.</p><form id="attendance-form"><table><thead><tr><th><input type="checkbox" id="check-all"></th><th>Nama Murid</th><th>Status</th><th>Catatan</th></tr></thead><tbody>`;
+            let tableHTML = `<p style="text-align:center; font-style:italic; color: var(--text-color-secondary); margin-top:0;">Tandakan hanya murid yang tidak hadir, lewat, atau bersebab.</p><form id="attendance-form"><table><thead><tr><th><input type="checkbox" id="check-all"></th><th>Nama Murid</th><th>Status</th><th>Catatan</th></tr></thead><tbody>`;
             students.forEach(student => { tableHTML += `<tr data-studentid="${student.studentId}"><td><input type="checkbox" class="student-checkbox"></td><td>${student.studentName}</td><td><select class="status-select" disabled><option value="Absent">Tidak Hadir</option><option value="Late">Lewat</option><option value="Excused">Bersebab</option></select></td><td><input type="text" class="remarks-input" placeholder="Cth: Demam" disabled></td></tr>`; });
             tableHTML += `</tbody></table></form>`;
             modalStudentList.innerHTML = tableHTML;
@@ -189,7 +235,7 @@
             submitBtn.id = 'submit-btn';
             submitBtn.type = 'submit';
             submitBtn.setAttribute('form', 'attendance-form');
-            submitBtn.textContent = 'Hantar Rekod';
+            submitBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg><span>Hantar Rekod</span>`;
             modalHeader.appendChild(submitBtn);
             document.querySelectorAll('.student-checkbox').forEach(cb => cb.addEventListener('change', (e) => { const row = e.target.closest('tr'); row.querySelectorAll('select, input[type="text"]').forEach(el => el.disabled = !e.target.checked); }));
             document.getElementById('check-all').addEventListener('change', (e) => { document.querySelectorAll('.student-checkbox').forEach(cb => { cb.checked = e.target.checked; cb.dispatchEvent(new Event('change')); }); });
@@ -200,7 +246,7 @@
             event.preventDefault();
             const submitBtn = document.getElementById('submit-btn');
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Menghantar...';
+            submitBtn.innerHTML = `<span>Menghantar...</span>`;
             const attendanceData = [];
             document.querySelectorAll('#attendance-form tbody tr').forEach(row => {
                 if (row.querySelector('.student-checkbox').checked) {
@@ -216,7 +262,6 @@
             } catch (error) { showMessage(`Gagal menghantar data: Terdapat isu rangkaian.`, true); }
         }
 
-        // --- FUNGSI UNTUK ALERTS DAN SUMMARY DIKEMBALIKAN ---
         async function fetchAlerts() {
             alertsContainer.innerHTML='<div class="loader">Menyemak...</div>';
             try {
@@ -228,7 +273,7 @@
         }
 
         function renderAlerts(alerts) {
-            if (alerts.length === 0) { alertsContainer.innerHTML='<p class="message success" style="display:block;">Tiada amaran ditemui.</p>'; return; }
+            if (alerts.length === 0) { alertsContainer.innerHTML='<p class="message success" style="display:block; background-color: var(--light-bg-color); border: 1px solid var(--border-color);">Tiada amaran ditemui.</p>'; return; }
             let listHTML = '<ul>';
             alerts.forEach(a => { listHTML += `<li><strong>${a.studentName}</strong> (ID: ${a.studentId})<br><small>Amaran pada: ${a.thirdAbsenceDate}</small></li>`; });
             listHTML += '</ul>';
@@ -251,7 +296,7 @@
             const { overall, byClass } = data;
             let html = `<div class="summary-section"><h2>Rumusan Keseluruhan</h2><div class="overall-stats"><div class="stat-card"><div class="value">${overall.totalStudents}</div><div class="label">Jumlah Murid</div></div><div class="stat-card"><div class="value green">${overall.totalPresent}</div><div class="label">Hadir</div></div><div class="stat-card"><div class="value red">${overall.totalAbsent}</div><div class="label">Tidak Hadir</div></div><div class="stat-card"><div class="value green">${overall.percentage}</div><div class="label">Peratus Hadir</div></div></div></div><div class="summary-section"><h2>Pecahan Mengikut Kelas</h2><div class="class-grid">`;
             byClass.forEach(cls => {
-                html += `<div class="class-card"><h3>${cls.className}</h3><div class="details"><div><div class="value">${cls.present}/${cls.totalStudents}</div><div class="label">Hadir</div></div><div><div class="value red">${cls.absent}</div><div class="label">Tidak Hadir</div></div></div><div class="stat-card" style="margin-top:15px;background-color:var(--white-color);"><div class="value green">${cls.percentage}</div><div class="label">Peratus Hadir</div></div></div>`;
+                html += `<div class="class-card" style="padding: 24px;"><h3>${cls.className}</h3><div class="overall-stats" style="grid-template-columns: 1fr 1fr; gap: 12px;"><div><div class="value" style="font-size: 1.8em;">${cls.present}/${cls.totalStudents}</div><div class="label">Hadir</div></div><div><div class="value red" style="font-size: 1.8em;">${cls.absent}</div><div class="label">Tidak Hadir</div></div></div><div class="stat-card" style="margin-top:15px;background-color:var(--white-color); padding: 12px;"><div class="value green">${cls.percentage}</div><div class="label">Peratus Hadir</div></div></div>`;
             });
             html += '</div></div>';
             summaryContainer.innerHTML = html;
@@ -263,7 +308,7 @@
             summaryDatePicker.value = today;
             loadClassDashboard();
             dashboardDatePicker.addEventListener('change', loadClassDashboard);
-            fetchSummaryBtn.addEventListener('click', fetchSummary); // Event listener dikembalikan
+            fetchSummaryBtn.addEventListener('click', fetchSummary);
             modalCloseBtn.addEventListener('click', () => { attendanceModal.style.display = 'none'; });
             attendanceModal.addEventListener('click', (e) => { if (e.target === attendanceModal) { attendanceModal.style.display = 'none'; } });
         }
